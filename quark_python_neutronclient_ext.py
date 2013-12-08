@@ -72,31 +72,33 @@ class IpPolicyList(extension.ExtensionList):
     resource_path = "/%s" % resource_plural
     list_columns = ["id", "tenant_id", "name", "subnet_ids", "network_ids",
                     "exclude"]
-    log = extension.NeutronExtension.get_logger('ListRoutes')
+    log = extension.NeutronExtension.get_logger('ListIpPolicies')
 
 
-class IpPolicyCreate(extension.ExtensionList):
+class IpPolicyCreate(extension.ExtensionCreate):
     resource = "ip_policy"
     resource_plural = "ip_policies"
     resource_path = "/%s" % resource_plural
-    log = extension.NeutronExtension.get_logger('ListRoutes')
+    log = extension.NeutronExtension.get_logger('ListIpPolicies')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
-            'subnet_id', metavar='SUBNET_ID',
-            help='Subnet ID to associate the route with')
+            '--subnet_id', dest="subnet_ids", action="append",
+            help='Subnet IDs to associate the route with.')
         parser.add_argument(
-            'cidr', metavar='CIDR',
-            help='CIDR mask for the route')
+            '--network_id', dest="network_ids", action="append",
+            help='Network IDs to associate the route with.')
         parser.add_argument(
-            'gateway', metavar='GATEWAY',
-            help='Destination gateway for the route')
+            '--exclude', dest="exclude", action="append",
+            help='CIDRs to exclude in the policy.')
 
     def args2body(self, parsed_args):
+        print parsed_args.subnet_ids
+        print parsed_args.exclude
         body = {self.resource: {
-            'cidr': parsed_args.cidr,
-            'subnet_id': parsed_args.subnet_id,
-            'gateway': parsed_args.gateway}, }
+            'subnet_ids': parsed_args.subnet_ids,
+            'network_ids': parsed_args.network_ids,
+            'exclude': parsed_args.exclude}, }
         return body
 
 
