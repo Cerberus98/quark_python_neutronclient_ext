@@ -18,10 +18,29 @@ from neutronclient.common import extension
 class MacAddressRangeList(extension.ExtensionList):
     """(Admin-only) List all MAC Address Ranges."""
     resource = "mac_address_range"
-    resource_plural = "%ses" % (resource)
+    resource_plural = "%ss" % (resource)
     resource_path = "/%s" % resource_plural
     list_columns = ["id", "cidr"]
     log = extension.NeutronExtension.get_logger('ListMacAddressRanges')
+
+
+class MacAddressRangeCreate(extension.ExtensionCreate):
+    """(Admin-only) Create MAC Address Ranges."""
+    resource = "mac_address_range"
+    resource_plural = "%ss" % (resource)
+    resource_path = "/%s" % resource_plural
+    list_columns = ["id", "cidr"]
+    log = extension.NeutronExtension.get_logger('CreateMacAddressRanges')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            'cidr', metavar='CIDR',
+            help='CIDR mask for the route')
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {
+            'cidr': parsed_args.cidr}}
+        return body
 
 
 class RoutesList(extension.ExtensionList):
@@ -112,6 +131,7 @@ class IpPolicyDelete(extension.ExtensionDelete):
 
 EXTENSIONS = {
     "mac-range-list": MacAddressRangeList,
+    "mac-range-create": MacAddressRangeCreate,
     "route-list": RoutesList,
     "ip-policy-list": IpPolicyList,
     "ip-policy-create": IpPolicyCreate,
