@@ -15,29 +15,29 @@
 from neutronclient.common import extension
 
 
-class MacAddressRangeList(extension.ExtensionList):
+class MacAddressRangeList(extension.ClientExtensionList):
     """(Admin-only) List all MAC Address Ranges."""
     resource = "mac_address_range"
     resource_plural = "%ses" % (resource)
     resource_path = "/%s" % resource_plural
     list_columns = ["id", "cidr"]
-    log = extension.NeutronExtension.get_logger('ListMacAddressRanges')
+    log = extension.NeutronClientExtension.get_logger('ListMacAddressRanges')
 
 
-class RoutesList(extension.ExtensionList):
+class RoutesList(extension.ClientExtensionList):
     """List routes all routes for a tenant."""
     resource = "routes"
     resource_path = "/%s" % resource
     list_columns = ["id", "subnet_id", "cidr", "gateway"]
-    log = extension.NeutronExtension.get_logger('ListRoutes')
+    log = extension.NeutronClientExtension.get_logger('ListRoutes')
 
 
-class RoutesCreate(extension.ExtensionCreate):
+class RoutesCreate(extension.ClientExtensionCreate):
     """Create a new route for a given subnet."""
     resource = "route"
     resource_plural = "%ss" % (resource)
     resource_path = "/%s" % resource_plural
-    log = extension.NeutronExtension.get_logger('CreateRoute')
+    log = extension.NeutronClientExtension.get_logger('CreateRoute')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
@@ -58,28 +58,28 @@ class RoutesCreate(extension.ExtensionCreate):
         return body
 
 
-class RoutesDelete(extension.ExtensionDelete):
+class RoutesDelete(extension.ClientExtensionDelete):
     """Deletes a route by id."""
     resource = "route"
     resource_plural = "%ss" % (resource)
     resource_path = "/%s" % resource_plural
-    log = extension.NeutronExtension.get_logger('DeleteRoute')
+    log = extension.NeutronClientExtension.get_logger('DeleteRoute')
 
 
-class IpPolicyList(extension.ExtensionList):
+class IpPolicyList(extension.ClientExtensionList):
     resource = "ip_policy"
     resource_plural = "ip_policies"
     resource_path = "/%s" % resource_plural
     list_columns = ["id", "tenant_id", "name", "subnet_ids", "network_ids",
                     "exclude"]
-    log = extension.NeutronExtension.get_logger('ListRoutes')
+    log = extension.NeutronClientExtension.get_logger('ListRoutes')
 
 
-class IpPolicyCreate(extension.ExtensionList):
+class IpPolicyCreate(extension.ClientExtensionList):
     resource = "ip_policy"
     resource_plural = "ip_policies"
     resource_path = "/%s" % resource_plural
-    log = extension.NeutronExtension.get_logger('ListRoutes')
+    log = extension.NeutronClientExtension.get_logger('ListRoutes')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
@@ -100,15 +100,15 @@ class IpPolicyCreate(extension.ExtensionList):
         return body
 
 
-class IpPolicyDelete(extension.ExtensionDelete):
+class IpPolicyDelete(extension.ClientExtensionDelete):
     """Deletes a route by id."""
     resource = "ip_policy"
     resource_plural = "ip_policies"
     resource_path = "/%s" % resource_plural
-    log = extension.NeutronExtension.get_logger('DeleteIpPolicy')
+    log = extension.NeutronClientExtension.get_logger('DeleteIpPolicy')
 
 
-EXTENSIONS = {
+COMMANDS = {
     "mac-range-list": MacAddressRangeList,
     "route-list": RoutesList,
     "ip-policy-list": IpPolicyList,
